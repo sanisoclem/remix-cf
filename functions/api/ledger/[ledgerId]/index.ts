@@ -1,6 +1,5 @@
 import { LedgerManager } from '@server/ledger';
 import * as Model from '@lib/model';
-import { valueOrFirst } from '@lib/utils';
 import { BadRequestError } from '@server/errors';
 
 export const onRequestGet: PagesFunction<Env, ParamsLedger, AuthenticatedData> = async ({
@@ -25,11 +24,11 @@ export const onRequestPut: PagesFunction<Env, ParamsLedger, AuthenticatedData> =
   params
 }) => {
   const ledgerMgr = new LedgerManager(env);
-  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
-
   const payload = Model.ledgerSchema.parse(await request.json());
+
+  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
 
   await ledgerMgr.updateLedger(data.currentUser.userId, params.ledgerId, payload);
 
-  return new Response('success');
+  return new Response(JSON.stringify('OK'));
 };

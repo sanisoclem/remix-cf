@@ -1,13 +1,13 @@
 import { useParentData } from "~/hooks";
 import { loaderDataSchema as ledgerDataSchema } from "../ledger.$ledgerId";
 
-export default function Unauthorized() {
+export default function LedgerHome() {
   const ledgerState = ledgerDataSchema.parse(useParentData('routes/ledger.$ledgerId'));
   return (
     <div className={"hero min-h-screen"}>
       <div className={"hero-overlay bg-opacity-60"} />
       <div className={"hero-content text-center text-neutral-content"}>
-        <div className={""}>
+        <div>
           <h1 className={"mb-5 text-5xl font-bold"}>{ledgerState.ledger.name}</h1>
 
           <div className={"stats shadow mb-8 text-left"}>

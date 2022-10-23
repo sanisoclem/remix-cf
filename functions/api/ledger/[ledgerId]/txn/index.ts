@@ -1,6 +1,6 @@
 import * as Model from '@lib/model';
 import { LedgerManager } from '@server/ledger';
-import { toInt, valueOrFirst } from '@lib/utils';
+import { toInt } from '@lib/utils';
 import { BadRequestError } from '@server/errors';
 
 export const onRequestGet: PagesFunction<Env, ParamsLedger, AuthenticatedData> = async ({
@@ -12,9 +12,11 @@ export const onRequestGet: PagesFunction<Env, ParamsLedger, AuthenticatedData> =
   const url = new URL(request.url);
   const ledgerMgr = new LedgerManager(env);
 
+  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
+
   const txns = await ledgerMgr.getTransactions(
     data.currentUser.userId,
-    valueOrFirst(params.ledgerId),
+    params.ledgerId,
     url.searchParams.getAll('accountId'),
     toInt(url.searchParams.get('skip'), undefined),
     toInt(url.searchParams.get('take'), undefined)
@@ -30,11 +32,11 @@ export const onRequestPost: PagesFunction<Env, ParamsLedger, AuthenticatedData> 
   params
 }) => {
   const ledgerMgr = new LedgerManager(env);
+  const txn = Model.transactionNoIdSchema.parse(await request.json());
 
-  const txn = await request.json();
-  if (!Model.transactionNoIdGuard.is(txn)) throw new BadRequestError();
+  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
 
-  await ledgerMgr.postTransaction(data.currentUser.userId, valueOrFirst(params.ledgerId), txn);
+  await ledgerMgr.postTransaction(data.currentUser.userId, params.ledgerId, txn);
 
-  return new Response('success');
+  return new Response(JSON.stringify('success'));
 };

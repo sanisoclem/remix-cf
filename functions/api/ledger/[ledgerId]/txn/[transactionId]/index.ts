@@ -1,5 +1,4 @@
 import * as Model from '@lib/model';
-import { valueOrFirst } from '@lib/utils';
 import { BadRequestError } from '@server/errors';
 import { LedgerManager } from '@server/ledger';
 
@@ -10,17 +9,16 @@ export const onRequestPut: PagesFunction<Env, ParamsTxn, AuthenticatedData> = as
   params
 }) => {
   const ledgerMgr = new LedgerManager(env);
+  const txn = Model.transactionNoIdSchema.parse(await request.json());
 
-  const txn = await request.json();
-
-  if (!Model.transactionNoIdGuard.is(txn)) throw new BadRequestError();
+  if (typeof params.ledgerId !== 'string' || typeof params.transactionId !== 'string') throw new BadRequestError();
 
   await ledgerMgr.updateTransaction(
     data.currentUser.userId,
-    valueOrFirst(params.ledgerId),
-    valueOrFirst(params.transactionId),
+    params.ledgerId,
+    params.transactionId,
     txn
   );
 
-  return new Response('success');
+  return new Response(JSON.stringify('success'));
 };

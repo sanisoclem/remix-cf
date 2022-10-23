@@ -1,6 +1,5 @@
 import { NavLink, Outlet } from '@remix-run/react';
-import { Link, useFetcher, useLoaderData } from '@remix-run/react';
-import { useBoolean } from '~/hooks';
+import { Link, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 import { LoaderFunction, redirect } from '@remix-run/cloudflare';
 import * as Model from '~lib/model';
@@ -55,45 +54,6 @@ export default function LedgerLayout() {
     <div className={'drawer drawer-mobile'}>
       <input id="my-drawer-2" type="checkbox" className={'drawer-toggle'} />
       <div className={'drawer-content'}>
-        <div className={'navbar bg-base-100'}>
-          <div className={'flex-none'}>
-            <label htmlFor="my-drawer-2" className={'btn btn-square btn-ghost lg:hidden'}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className={'inline-block w-5 h-5 stroke-current'}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </label>
-          </div>
-          <div className={'flex-1'}>
-            <a className={'btn btn-ghost normal-case text-xl'}>{ledgerState.ledger.name}</a>
-          </div>
-          <div className={'flex-none'}>
-            <button className={'btn btn-square btn-ghost'}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className={'inline-block w-5 h-5 stroke-current'}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
         <Outlet />
       </div>
       <div className={'drawer-side'}>
@@ -113,7 +73,7 @@ export default function LedgerLayout() {
                 <Link to="/ledgers">Open Ledger</Link>
               </li>
               <li>
-                <Link to={`/ledger/${ledgerState.ledgerId}/account-new`}>New Account</Link>
+                <Link to={`/ledger/${ledgerState.ledgerId}/act/new`}>New Account</Link>
               </li>
             </ul>
           </div>
@@ -148,7 +108,7 @@ export default function LedgerLayout() {
             <Link
               role="button"
               className={'btn-circle btn-xs'}
-              to={`/ledger/${ledgerState.ledgerId}/account-new`}
+              to={`/ledger/${ledgerState.ledgerId}/act/new`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +129,7 @@ export default function LedgerLayout() {
               <li key={act.accountId}>
                 <NavLink
                   className={'flex flex-row justify-between'}
-                  to={`/ledger/${ledgerState.ledgerId}/account/${act.accountId}/transactions`}
+                  to={`/ledger/${ledgerState.ledgerId}/act/${act.accountId}`}
                 >
                   <span>{act.name}</span>
                   <span>{act.balance.credits - act.balance.debits}</span>
