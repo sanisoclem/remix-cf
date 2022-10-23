@@ -3,33 +3,32 @@ import { useBoolean } from '~/hooks';
 import * as Model from '~lib/model';
 
 interface Props {
-  ledgerList: Model.LedgerListItem[]
+  ledgerList: Model.LedgerListItem[];
 }
 
 export default function LedgerSelect({ ledgerList }: Props) {
-  const fetcher = useFetcher()
+  const fetcher = useFetcher();
   const { value: formShown, setTrue: showForm, setFalse: hideForm } = useBoolean(false);
 
   return ledgerList.length === 0 || formShown ? (
     <>
-      <p className={"mb-5"}>Create a new ledger.</p>
-      <form className={"flex flex-col items-stretch gap-2"}
-      >
-        <div className={"form-control"}>
+      <p className={'mb-5'}>Create a new ledger.</p>
+      <form className={'flex flex-col items-stretch gap-2'}>
+        <div className={'form-control'}>
           <input
             type="text"
             name="name"
             placeholder="Ledger name"
-            className={"input input-bordered"}
+            className={'input input-bordered'}
           />
         </div>
-        <div className={"flex justify-between"}>
-          <button type="button" className={"btn btn-outline"} onClick={() => hideForm()}>
+        <div className={'flex justify-between'}>
+          <button type="button" className={'btn btn-outline'} onClick={() => hideForm()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className={"w-5 h-5"}
+              className={'w-5 h-5'}
             >
               <path
                 fillRule="evenodd"
@@ -38,7 +37,11 @@ export default function LedgerSelect({ ledgerList }: Props) {
               />
             </svg>
           </button>
-          <button type="submit" disabled={fetcher.state === 'submitting'} className={"btn btn-primary"}>
+          <button
+            type="submit"
+            disabled={fetcher.state === 'submitting'}
+            className={'btn btn-primary'}
+          >
             {fetcher.state === 'submitting' ? 'Creating...' : 'Create'}
           </button>
         </div>
@@ -46,27 +49,23 @@ export default function LedgerSelect({ ledgerList }: Props) {
     </>
   ) : (
     <>
-      <p className={"mb-5"}>Pick a ledger to get started.</p>
-      <div className={"flex flex-col gap-2 items-stretch text-center w-full"}>
-        <ul className={"flex flex-col gap-2 w-full items-stretch"}>
+      <p className={'mb-5'}>Pick a ledger to get started.</p>
+      <div className={'flex flex-col gap-2 items-stretch text-center w-full'}>
+        <ul className={'flex flex-col gap-2 w-full items-stretch'}>
           {ledgerList.map((ledger) => (
             <li key={ledger.ledgerId}>
-              <Link to={`/ledger/${ledger.ledgerId}`} className={"btn btn-accent w-full"}>
+              <Link to={`/ledger/${ledger.ledgerId}`} className={'btn btn-accent w-full'}>
                 {ledger.name}
               </Link>
             </li>
           ))}
         </ul>
-        <button
-          type="button"
-          className={"btn btn-outline btn-primary"}
-          onClick={() => showForm()}
-        >
+        <button type="button" className={'btn btn-outline btn-primary'} onClick={() => showForm()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={"w-5 h-5"}
+            className={'w-5 h-5'}
           >
             <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
           </svg>
@@ -74,4 +73,4 @@ export default function LedgerSelect({ ledgerList }: Props) {
       </div>
     </>
   );
-};
+}

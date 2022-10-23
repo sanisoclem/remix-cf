@@ -11,7 +11,8 @@ export const onRequestPut: PagesFunction<Env, ParamsTxn, AuthenticatedData> = as
   const ledgerMgr = new LedgerManager(env);
   const txn = Model.transactionNoIdSchema.parse(await request.json());
 
-  if (typeof params.ledgerId !== 'string' || typeof params.transactionId !== 'string') throw new BadRequestError();
+  if (typeof params.ledgerId !== 'string' || typeof params.transactionId !== 'string')
+    throw new BadRequestError();
 
   await ledgerMgr.updateTransaction(
     data.currentUser.userId,

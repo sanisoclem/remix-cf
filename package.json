@@ -8,7 +8,10 @@
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
     "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public --kv EB",
     "dev": "remix build && run-p \"dev:*\"",
-    "start": "cross-env NODE_ENV=production npm run dev:wrangler"
+    "start": "cross-env NODE_ENV=production npm run dev:wrangler",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write .",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@remix-run/cloudflare": "^1.7.3",
@@ -31,6 +34,7 @@
     "autoprefixer": "^10.4.12",
     "daisyui": "^2.33.0",
     "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard-with-typescript": "^23.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
@@ -52,5 +56,10 @@
   },
   "engines": {
     "node": ">=16.13"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "**/*.ts": "eslint",
+    "**/*.js": "eslint"
   }
 }

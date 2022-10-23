@@ -6,6 +6,6 @@ export class BadRequestError extends Error {
 
 export class NotFoundError extends Error {
   constructor(message?: string) {
-    super(message === undefined ? 'Resource was not found': message);
+    super(message === undefined ? 'Resource was not found' : message);
   }
 }

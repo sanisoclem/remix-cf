@@ -11,9 +11,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const ledgerId = params.ledgerId;
   const accountId = params.accountId;
   const form = await request.formData();
-  let data: Record<string, unknown> = {};
+  const data: Record<string, unknown> = {};
 
-  for (let [k, v] of form.entries()) {
+  for (const [k, v] of form.entries()) {
     data[k] = v;
   }
 

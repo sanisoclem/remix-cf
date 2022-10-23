@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ActionFunction, LoaderFunction, redirect } from '@remix-run/cloudflare';
+import { ActionFunction, LoaderFunction } from '@remix-run/cloudflare';
 import { fetchJson, getFormInt } from '~lib/utils';
 import * as Model from '~lib/model';
 import { useParentData } from '~/hooks';
@@ -15,12 +15,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const txn = Model.transactionNoIdSchema.parse({
     date: getFormInt(data, 'date'),
     amount,
-    amountCredit: getFormInt(data, 'amountCredit') || amount,
-    amountDebit: getFormInt(data, 'amountDebit') || amount,
+    amountCredit: getFormInt(data, 'amountCredit') ?? amount,
+    amountDebit: getFormInt(data, 'amountDebit') ?? amount,
     credit: data.get('credit') ?? null,
     debit: data.get('debit') ?? null,
-    notes: data.get('notes') || ''
+    notes: data.get('notes') ?? ''
   });
+
+  if (params.ledgerId === undefined) throw new Error('cannot find ledgerId');
 
   if (typeof transactionId === 'string') {
     await fetchJson(
@@ -33,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       request
     );
   } else {
-    const resp = await fetchJson(
+    await fetchJson(
       `${url.origin}/api/ledger/${params.ledgerId}/txn`,
       {
         method: 'POST',
@@ -42,7 +44,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       z.any(),
       request
     );
-    resp.ok;
   }
 
   return null;
@@ -70,7 +71,7 @@ export const loader: LoaderFunction = async ({
         accountId: params.accountId,
         ...(skip !== null ? { skip } : {}),
         ...(take !== null ? { take } : {})
-      }),
+      }).toString(),
     undefined,
     Model.transactionListSchema,
     request
@@ -94,7 +95,7 @@ type ComponentState =
     };
 
 export default function AccountTransactions() {
-  const params = useParams();
+  const { ledgerId, accountId } = useParams();
   const { txns } = loaderDataSchema.parse(useLoaderData());
   const fetchTxn = useFetcher();
   const ledgerState = ledgerDataSchema.parse(useParentData('routes/ledger.$ledgerId'));
@@ -102,6 +103,9 @@ export default function AccountTransactions() {
   const [state, setState] = useState<ComponentState>({
     formState: 'none'
   });
+
+  if (ledgerId === undefined || accountId === undefined)
+    throw new Error('Cannot find ledger/account id');
 
   useEffect(() => {
     if (fetchTxn.type === 'done') {
@@ -126,7 +130,11 @@ export default function AccountTransactions() {
       <button type="button" className={'btn'} onClick={newTransaction}>
         New Transaction
       </button>
-      <fetchTxn.Form ref={formRef} method="post" action={`/ledger/${params.ledgerId}/act/${params.accountId}/txn`}>
+      <fetchTxn.Form
+        ref={formRef}
+        method="post"
+        action={`/ledger/${ledgerId}/act/${accountId}/txn`}
+      >
         <div className={'overflow-x-auto'}>
           <table className={'table table-zebra w-full'}>
             <thead>

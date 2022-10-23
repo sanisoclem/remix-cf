@@ -1,7 +1,6 @@
-import { NavLink, Outlet } from '@remix-run/react';
-import { Link, useLoaderData } from '@remix-run/react';
+import { NavLink, Outlet, Link, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
-import { LoaderFunction, redirect } from '@remix-run/cloudflare';
+import { LoaderFunction } from '@remix-run/cloudflare';
 import * as Model from '~lib/model';
 import { fetchJson } from '~lib/utils';
 

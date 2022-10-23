@@ -11,9 +11,7 @@ export const onRequestGet: PagesFunction<Env, ParamsLedger, AuthenticatedData> =
   if (typeof params.ledgerId !== 'string') throw new BadRequestError();
 
   return new Response(
-    JSON.stringify(
-      await ledgerMgr.getLedger(data.currentUser.userId, params.ledgerId)
-    )
+    JSON.stringify(await ledgerMgr.getLedger(data.currentUser.userId, params.ledgerId))
   );
 };
 

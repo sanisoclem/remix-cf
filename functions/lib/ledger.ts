@@ -12,10 +12,8 @@ const updateBalance = (
   } else {
     const b = bal.accounts[txn.credit];
     bal.accounts[txn.credit] = {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      credits: op(b?.credits || 0, txn.amountCredit),
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      debits: b?.debits || 0
+      credits: op(b?.credits ?? 0, txn.amountCredit),
+      debits: b?.debits ?? 0
     };
   }
 
@@ -24,10 +22,8 @@ const updateBalance = (
   } else {
     const b = bal.accounts[txn.debit];
     bal.accounts[txn.debit] = {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      credits: b?.credits || 0,
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      debits: op(b?.debits || 0, txn.amountDebit)
+      credits: b?.credits ?? 0,
+      debits: op(b?.debits ?? 0, txn.amountDebit)
     };
   }
   return bal;
@@ -114,7 +110,7 @@ export class LedgerManager {
     const doc = await this.env.EB.get(LedgerManager.txnIndexKey(userId, ledgerId), {
       type: 'json'
     });
-    const allTxns = doc == null ? [] :  Model.transactionListSchema.parse(doc);
+    const allTxns = doc == null ? [] : Model.transactionListSchema.parse(doc);
     const sorted: Model.Transaction[] = [...allTxns, { ...txn, transactionId: v4() }].sort(
       (a, b) => a.date - b.date
     );
@@ -132,13 +128,13 @@ export class LedgerManager {
     txn: Model.TransactionNoId
   ): Promise<void> {
     const ledger = await this.getLedger(userId, ledgerId);
-    if (ledger === null) throw new BadRequestError();;
+    if (ledger === null) throw new BadRequestError();
 
     const doc = await this.env.EB.get(LedgerManager.txnIndexKey(userId, ledgerId), {
       type: 'json'
     });
 
-    const allTxns = doc == null ? [] :  Model.transactionListSchema.parse(doc);
+    const allTxns = doc == null ? [] : Model.transactionListSchema.parse(doc);
 
     const [oldTxn] = allTxns.splice(
       allTxns.findIndex((t) => t.transactionId === txnId),
@@ -167,7 +163,7 @@ export class LedgerManager {
     const doc = await this.env.EB.get(LedgerManager.txnIndexKey(userId, ledgerId), {
       type: 'json'
     });
-    const allTxns = doc == null ? [] :  Model.transactionListSchema.parse(doc);
+    const allTxns = doc == null ? [] : Model.transactionListSchema.parse(doc);
 
     const filteredTxns = allTxns.filter(
       (t) =>

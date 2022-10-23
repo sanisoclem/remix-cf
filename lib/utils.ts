@@ -34,7 +34,7 @@ export const fetchJson = async <S extends z.ZodType>(
     ...(init ?? {}),
     ...(typeof cookie === 'string' ? { headers: { cookie } } : {})
   };
-  var resp = await fetch(url, opts);
-  var json = await resp.json();
+  const resp = await fetch(url, opts);
+  const json = await resp.json();
   return schema.parse(json);
 };

@@ -17,6 +17,7 @@ specifiers:
   cross-env: ^7.0.3
   daisyui: ^2.33.0
   eslint: ^8.0.1
+  eslint-config-prettier: ^8.5.0
   eslint-config-standard-with-typescript: ^23.0.0
   eslint-plugin-import: ^2.25.2
   eslint-plugin-n: ^15.0.0
@@ -59,6 +60,7 @@ devDependencies:
   autoprefixer: 10.4.12_postcss@8.4.18
   daisyui: 2.33.0_xkowlklhtk6sfvtndbucb3hfiy
   eslint: 8.26.0
+  eslint-config-prettier: 8.5.0_eslint@8.26.0
   eslint-config-standard-with-typescript: 23.0.0_moqipopigh6gdgwpgnzcydvzw4
   eslint-plugin-import: 2.26.0_yxvyo6v5zwzggfecalzmx54lre
   eslint-plugin-n: 15.3.0_eslint@8.26.0
@@ -3651,6 +3653,15 @@ packages:
       optionator: 0.8.3
     optionalDependencies:
       source-map: 0.6.1
+    dev: true
+
+  /eslint-config-prettier/8.5.0_eslint@8.26.0:
+    resolution: {integrity: sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
+    dependencies:
+      eslint: 8.26.0
     dev: true
 
   /eslint-config-standard-with-typescript/23.0.0_moqipopigh6gdgwpgnzcydvzw4:

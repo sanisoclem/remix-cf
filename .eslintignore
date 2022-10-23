@@ -5,9 +5,14 @@ node_modules
 .env
 .env.*
 !.env.example
+/public
+/functions/\[\[path\]\].js*
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
 old
+/server.js
+/remix.config.js
+/remix.config.js

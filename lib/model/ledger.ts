@@ -32,7 +32,6 @@ export const ledgerSchema = z.object({
 });
 export type Ledger = z.infer<typeof ledgerSchema>;
 
-
 export const ledgerIdListSchema = z.array(z.string());
 export type LedgerIdList = z.infer<typeof ledgerIdListSchema>;
 
