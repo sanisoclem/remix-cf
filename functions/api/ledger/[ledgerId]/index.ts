@@ -9,10 +9,11 @@ export const onRequestGet: PagesFunction<Env, ParamsLedger, AuthenticatedData> =
   params
 }) => {
   const ledgerMgr = new LedgerManager(env);
+  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
 
   return new Response(
     JSON.stringify(
-      await ledgerMgr.getLedger(data.currentUser.userId, valueOrFirst(params.ledgerId))
+      await ledgerMgr.getLedger(data.currentUser.userId, params.ledgerId)
     )
   );
 };
@@ -24,11 +25,11 @@ export const onRequestPut: PagesFunction<Env, ParamsLedger, AuthenticatedData> =
   params
 }) => {
   const ledgerMgr = new LedgerManager(env);
+  if (typeof params.ledgerId !== 'string') throw new BadRequestError();
 
-  const payload = await request.json();
-  if (!Model.ledgerGuard.is(payload)) throw new BadRequestError();
+  const payload = Model.ledgerSchema.parse(await request.json());
 
-  await ledgerMgr.updateLedger(data.currentUser.userId, valueOrFirst(params.ledgerId), payload);
+  await ledgerMgr.updateLedger(data.currentUser.userId, params.ledgerId, payload);
 
   return new Response('success');
 };

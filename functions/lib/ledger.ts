@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import * as Model from '@lib/model';
+import { BadRequestError, NotFoundError } from './errors';
 
 const updateBalance = (
   bal: Model.Balances,
@@ -49,16 +50,16 @@ export class LedgerManager {
 
   async getLedgerIds(userId: string): Promise<Model.LedgerIdList> {
     const ledgerIds = await this.env.EB.get(LedgerManager.ledgerListKey(userId), { type: 'json' });
-    if (ledgerIds === null || !Model.ledgerIdListGuard.is(ledgerIds)) return [];
-    return ledgerIds;
+    if (ledgerIds === null) return [];
+    return Model.ledgerIdListSchema.parse(ledgerIds);
   }
 
-  async getLedger(userId: string, ledgerId: string): Promise<Model.Ledger | null> {
+  async getLedger(userId: string, ledgerId: string): Promise<Model.Ledger> {
     const val = await this.env.EB.get(LedgerManager.ledgerIdKey(userId, ledgerId), {
       type: 'json'
     });
-    if (Model.ledgerGuard.is(val)) return val;
-    return null;
+    if (val === null) throw new NotFoundError();
+    return Model.ledgerSchema.parse(val);
   }
 
   async getLedgers(userId: string): Promise<Ledger[]> {
@@ -108,7 +109,7 @@ export class LedgerManager {
     txn: Model.TransactionNoId
   ): Promise<void> {
     const ledger = await this.getLedger(userId, ledgerId);
-    if (ledger === null) return;
+    if (ledger === null) throw new BadRequestError();
 
     const doc = await this.env.EB.get(LedgerManager.txnIndexKey(userId, ledgerId), {
       type: 'json'
@@ -131,7 +132,7 @@ export class LedgerManager {
     txn: Model.TransactionNoId
   ): Promise<void> {
     const ledger = await this.getLedger(userId, ledgerId);
-    if (ledger === null) return;
+    if (ledger === null) throw new BadRequestError();;
 
     const doc = await this.env.EB.get(LedgerManager.txnIndexKey(userId, ledgerId), {
       type: 'json'
@@ -145,6 +146,8 @@ export class LedgerManager {
     const sorted: Model.Transaction[] = [...allTxns, { ...txn, transactionId: txnId }].sort(
       (a, b) => a.date - b.date
     );
+
+    if (oldTxn === undefined) throw new BadRequestError();
 
     ledger.balances = updateBalance(ledger.balances, oldTxn, (a, b) => a - b);
     ledger.balances = updateBalance(ledger.balances, txn);

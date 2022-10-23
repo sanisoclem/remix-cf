@@ -1,5 +1,4 @@
 import { LedgerManager } from '@server/ledger';
-import { z } from 'zod';
 
 export const onRequestGet: PagesFunction<Env, any, AuthenticatedData> = async ({ env, data }) => {
   const ledgerMgr = new LedgerManager(env);

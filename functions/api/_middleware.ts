@@ -9,7 +9,7 @@ const getCookie = (cookieString: string | null, key: string): string | null => {
   if (targetCookie === undefined) return null;
 
   const [, value] = targetCookie.split('=');
-  return value;
+  return value ?? null;
 };
 
 export const onRequest: Array<PagesFunction<Env, any, Data>> = [
